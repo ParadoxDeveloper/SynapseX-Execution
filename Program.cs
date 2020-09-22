@@ -2,32 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using sxlib;
 using sxlib.Specialized;
 
-namespace ScriptExecutorSXLIB
+namespace SynapseExecution
 {
     class Program
     {
-        static void Main(string[] args)
+          private static SxLibOffscreen SLib;
+          private static SxLibBase.SynLoadEvents LoadEvents;
+        private static SxLibBase.SynAttachEvents AttachEvents;
+
+         static void Main(string[] args)
         {
-            SLib = SxLib.InitializeOffscreen('./Synapse X.exe');
-            SLib.LoadEvent += Ev =>
+            SLib = SxLib.InitializeOffscreen(@"./");
+            if (LoadEvents == SxLibBase.SynLoadEvents.READY)
             {
-                if (Ev == SxLibBase.SynLoadEvents.READY)
+                SLib.Attach();
+                if (AttachEvents == SxLibBase.SynAttachEvents.READY)
                 {
-                    SLib.Attach();
-                    if (Ev == SxLibBase.SynAttachEvents.READY)
-                    {
-                        SLib.Execute('Code Here');
-
-
-                    }
-
+                    SLib.Execute("return nil");
                 }
-            };
+
+                return;
+            }
             SLib.Load();
+
         }
+        
     }
 }
